@@ -1,7 +1,9 @@
 # contrive
 
-*contrive* is a small library to manage mocked data for automated testing.  With contrive, you provide
-a set of basic data, then transform it as needed for various test situations.
+*contrive* is a small library to manage mocked data for automated testing.
+
+Instead of copy-pasting an object multiple times with small changes for each
+test case, you provide one basic object, then transform it as necessary.
 
 ## Synopsis
 ```
