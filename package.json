@@ -14,7 +14,7 @@
   "scripts": {
     "build": "node_modules/.bin/webpack --config conf/webpack-dist.js",
     "watch": "node_modules/.bin/webpack --config conf/webpack.js --watch",
-    "test": "node_modules/mocha/bin/mocha"
+    "test": "node_modules/mocha/bin/mocha spec/"
   },
   "dependencies": {
     "lodash": "^4.17.4"
