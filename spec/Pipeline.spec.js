@@ -1,15 +1,15 @@
 const expect = require('chai').expect;
-const ContrivedPipeline = require('../src/ContrivedPipeline');
+const Pipeline = require('../src/Pipeline');
 
-describe('ContrivedPipeline', () => {
+describe('Pipeline', () => {
     let pipe;
     before(() => {
-        pipe = new ContrivedPipeline();
+        pipe = new Pipeline();
     });
 
     it('can add an object to the pipline', () => {
-        pipe._object({ a: 1 });
-        expect(pipe._objects).to.equal([{ a: 1 }]);
+        pipe._injectObject({ a: 1 });
+        expect(pipe._objects).to.deep.equal([{ a: 1 }]);
     });
 
     it('has pipeline functions', () => {

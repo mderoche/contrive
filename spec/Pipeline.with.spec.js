@@ -3,32 +3,32 @@ const expect = require('chai').expect;
 const contrive = require('../src');
 
 describe('with', () => {
-    it('returns the contrived set for chaining', () => {
+    it('returns the pipeline for chaining', () => {
         expect(contrive.a({ a: 1 }).with())
-            .to.be.an.instanceof(contrive.ContrivedSet);
+            .to.be.an.instanceof(contrive.Pipeline);
     });
 
     it('does nothing if provided nothing', () => {
         let raw = { a: 1 };
         let c = contrive.a(raw).with();
 
-        expect(c.contrived[0])
-            .to.deep.equal({ payload: raw });
+        expect(c._objects[0])
+            .to.deep.equal(raw);
     });
 
     describe('object transforms', () => {
         it('merges in an object without colliding keys', () => {
             let c = contrive.a({ a: 1 }).with({ b: 2 });
 
-            expect(c.contrived[0])
-                .to.deep.equal({ payload: { a: 1, b: 2 } });
+            expect(c._objects[0])
+                .to.deep.equal({ a: 1, b: 2 });
         });
 
         it('merges in an object with colliding keys', () => {
             let c = contrive.a({ a: 1 }).with({ a: 2 });
 
-            expect(c.contrived[0])
-                .to.deep.equal({ payload: { a: 2 } });
+            expect(c._objects[0])
+                .to.deep.equal({ a: 2 });
         });
     });
 
@@ -39,8 +39,8 @@ describe('with', () => {
                 return payload;
             });
 
-            expect(c.contrived[0])
-                .to.deep.equal({ payload: { a: 2 } });
+            expect(c._objects[0])
+                .to.deep.equal({ a: 2 });
         });
 
         it('transforms with a function that uses the index', () => {
@@ -49,8 +49,8 @@ describe('with', () => {
                 return payload;
             });
 
-            expect(c.contrived)
-                .to.deep.equal([ { payload: { a: 0 } }, { payload: { a: 1 } } ]);
+            expect(c._objects)
+                .to.deep.equal([ { a: 0 }, { a: 1 } ]);
         });
 
         it('transforms the payload with a function with arguments', () => {
@@ -61,13 +61,13 @@ describe('with', () => {
                 someArg: 'test'
             });
 
-            expect(c.contrived[0])
-                .to.deep.equal({ payload: { a: 'test' } });
+            expect(c._objects[0])
+                .to.deep.equal({ a: 'test' });
         });
     });
 
     describe('remembering transforms', () => {
-        it('can reminisce on a remembered transform', () => {
+        xit('can reminisce on a remembered transform', () => {
             contrive.transform('b', { b: 2 });
             let transformed = contrive.a({ a: 1 }).with('b').valueOf();
             expect(transformed).to.deep.equal({ a: 1, b: 2 });

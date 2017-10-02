@@ -1,26 +1,29 @@
-const ContrivedSet = require('./ContrivedSet');
-const Contrived = require('./Contrived');
+const Pipeline = require('./Pipeline');
 const Memory = require('./Memory');
 
-const resolveObject = data => {
-    if (typeof data === 'string') {
-        let remembered = memory.reminisce('object', data);
+const createPipeline = object => {
+
+    // if it's a string, see if it's been remembered
+    if (typeof object === 'string') {
+        let remembered = memory.reminisce('object', object);
         if (remembered) {
-            data = remembered;
+            object = remembered;
         }
     }
 
-    return new ContrivedSet(data);
-}
+    let pipe = new Pipeline();
+    pipe._injectObject(object);
+
+    return pipe;
+};
 
 const memory = new Memory();
 
 module.exports = {
-    ContrivedSet: ContrivedSet,
-    Contrived: Contrived,
+    Pipeline: Pipeline,
 
-    a: resolveObject,
-    an: resolveObject,
+    a: createPipeline,
+    an: createPipeline,
 
     object: (name, object) => {
         memory.remember('object', name, object)
