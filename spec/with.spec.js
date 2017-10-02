@@ -65,4 +65,12 @@ describe('with', () => {
                 .to.deep.equal({ payload: { a: 'test' } });
         });
     });
+
+    describe('remembering transforms', () => {
+        it('can reminisce on a remembered transform', () => {
+            contrive.transform('b', { b: 2 });
+            let transformed = contrive.a({ a: 1 }).with('b').valueOf();
+            expect(transformed).to.deep.equal({ a: 1, b: 2 });
+        });
+    })
 });
