@@ -1,6 +1,7 @@
 # contrive
 
 [![Build Status](https://travis-ci.org/mderoche/contrive.svg?branch=master)](https://travis-ci.org/mderoche/contrive)
+[![Coverage Status](https://coveralls.io/repos/github/mderoche/contrive/badge.svg?branch=master)](https://coveralls.io/github/mderoche/contrive?branch=master)
 
 *contrive* is a small library to manage mocked data for automated testing.
 
