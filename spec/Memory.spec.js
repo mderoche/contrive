@@ -8,25 +8,25 @@ describe('Memory', () => {
     });
 
     it('can remember an object', () => {
-        m.remember('object', 'test', { a: 1 });
-        expect(m.memory.object.test).to.deep.equal({ a: 1 });
+        m.set('object', 'test', { a: 1 });
+        expect(m.store.object.test).to.deep.equal({ a: 1 });
     });
 
     it('can forget an object', () => {
-        m.remember('object', 'test', { a: 1 });
-        m.forget('object', 'test');
-        expect(m.memory.object.test).to.equal(undefined);
+        m.set('object', 'test', { a: 1 });
+        m.remove('object', 'test');
+        expect(m.store.object.test).to.equal(undefined);
     });
 
     it('can forget about everything', () => {
-        m.remember('object', 'test', { a: 1 });
+        m.set('object', 'test', { a: 1 });
         m.amnesia();
-        expect(m.memory).to.deep.equal({});
+        expect(m.store).to.deep.equal({});
     });
 
     it('can reminisce about something remembered', () => {
-        m.remember('object', 'test', { a: 1 });
-        let obj = m.reminisce('object', 'test');
+        m.set('object', 'test', { a: 1 });
+        let obj = m.get('object', 'test');
         expect(obj).to.deep.equal({ a: 1 });
     });
 });

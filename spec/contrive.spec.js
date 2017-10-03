@@ -10,10 +10,8 @@ describe('contriving', () => {
         });
     });
 
-    describe('memory', () => {
-        it('can remember an object', () => {
-            contrive.object('test', { a: 1 });
-            expect(contrive.a('test')._objects[0]).to.deep.equal({ a: 1 });
-        });
+    it('can remember an object', () => {
+        contrive.object('test', { a: 1 });
+        expect(contrive.memory.store.object.test).to.deep.equal({ a: 1 });
     });
 });

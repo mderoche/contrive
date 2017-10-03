@@ -1,25 +1,25 @@
 class Memory {
     constructor () {
-        this.memory = {};
+        this.store = {};
     }
 
-    remember(category, name, object) {
-        if (!this.memory[category]) {
-            this.memory[category] = {};
+    set(category, name, object) {
+        if (!this.store[category]) {
+            this.store[category] = {};
         }
-        this.memory[category][name] = object;
+        this.store[category][name] = object;
     }
 
-    forget(category, name) {
-        delete this.memory[category][name];
+    remove(category, name) {
+        delete this.store[category][name];
     }
 
-    reminisce(category, name) {
-        return this.memory[category][name];
+    get(category, name) {
+        return this.store[category][name];
     }
 
     amnesia() {
-        this.memory = {};
+        this.store = {};
     }
 }
 

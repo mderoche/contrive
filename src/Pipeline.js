@@ -1,14 +1,30 @@
 const cloneDeep = require('lodash/cloneDeep');
 const merge = require('lodash/merge');
+const Memory = require('./Memory');
 
 class Pipeline {
-    constructor () {
+    constructor (def = {}) {
         this._objects = [];
+        this._memory = def.memoryStore || new Memory();
     };
 
-    _injectObject(object) {
-        this._objects.push(object);
+    _resolve(type, thing) {
+        if (typeof thing === 'string') {
+            let remembered = this._memory.get(type, thing);
+            return remembered || thing;
+        }
+        return thing;
+    }
+
+    _inject(object) {
+        this._objects.push(
+            this._resolve('object', object)
+        );
     };
+
+    _memoryStore(memory) {
+        this._memory = memory;
+    }
 
     times(n) {
         if (typeof n !== 'number') {
@@ -25,6 +41,8 @@ class Pipeline {
     };
 
     with(transform, args = {}) {
+        transform = this._resolve('transform', transform);
+
         this._objects = this._objects.map((c, i) => {
             let clonedArgs = cloneDeep(args);
             clonedArgs.i = i;
