@@ -8,7 +8,7 @@ describe('scenario:  restaurant bill', () => {
     });
 
     contrive.transform('tip', (object, args) => {
-        object.cost = object.cost + (object.cost * args.percent);
+        object.cost = object.cost + (object.cost * (args.percent / 100));
         return object;
     });
 
@@ -67,7 +67,7 @@ describe('scenario:  restaurant bill', () => {
             { cost: 60, guests: 4, table: 2, restaurant: 'Food Place' },
             { cost: 60, guests: 4, table: 3, restaurant: 'Food Place' },
             { cost: 60, guests: 4, table: 4, restaurant: 'Food Place' }
-        ]
+        ];
 
         expect(c).to.deep.equal(expected);
     });

@@ -3,18 +3,29 @@
   "version": "0.1.0",
   "main": "index.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mderoche/contrive.git"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.8.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.5.3",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^11.2.1",
     "webpack": "^3.6.0"
   },
   "scripts": {
     "build": "node_modules/.bin/webpack --config conf/webpack-dist.js",
     "watch": "node_modules/.bin/webpack --config conf/webpack.js --watch",
-    "test": "node_modules/mocha/bin/mocha spec/"
+    "test": "node_modules/.bin/nyc --reporter=lcov --reporter=text-lcov node_modules/.bin/mocha spec/**",
+    "test-pretty": "node_modules/.bin/nyc node_modules/.bin/mocha spec/**",
+    "lint": "node_modules/.bin/eslint src/*.js"
   },
   "dependencies": {
     "lodash": "^4.17.4"

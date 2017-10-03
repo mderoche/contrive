@@ -64,6 +64,23 @@ describe('with', () => {
             expect(c._objects[0])
                 .to.deep.equal({ a: 'test' });
         });
+
+        it('knows the index of the object in a function transform', () => {
+            let c = contrive.a({ cost: 10 })
+                .times(4)
+                .with((object, args) => {
+                    object.table = args.i;
+                    return object;
+                })
+                .valueOf();
+
+            expect(c).to.deep.equal([
+                { cost: 10, table: 0 },
+                { cost: 10, table: 1 },
+                { cost: 10, table: 2 },
+                { cost: 10, table: 3 }
+            ]);
+        });
     });
 
     describe('remembering transforms', () => {
@@ -72,5 +89,5 @@ describe('with', () => {
             let transformed = contrive.a({ a: 1 }).with('b').valueOf();
             expect(transformed).to.deep.equal({ a: 1, b: 2 });
         });
-    })
+    });
 });

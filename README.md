@@ -1,5 +1,7 @@
 # contrive
 
+[![Build Status](https://travis-ci.org/mderoche/contrive.svg?branch=master)](https://travis-ci.org/mderoche/contrive)
+
 *contrive* is a small library to manage mocked data for automated testing.
 
 Instead of copy-pasting an object multiple times with small changes for each

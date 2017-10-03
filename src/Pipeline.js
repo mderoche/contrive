@@ -6,7 +6,7 @@ class Pipeline {
     constructor (def = {}) {
         this._objects = [];
         this._memory = def.memoryStore || new Memory();
-    };
+    }
 
     _resolve(type, thing) {
         if (typeof thing === 'string') {
@@ -20,10 +20,25 @@ class Pipeline {
         this._objects.push(
             this._resolve('object', object)
         );
-    };
+    }
 
     _memoryStore(memory) {
         this._memory = memory;
+    }
+
+    _invokeTransform(object, transform, args = {}, index = 0) {
+        object = cloneDeep(object);
+        
+        let clonedArgs = cloneDeep(args);
+        clonedArgs.i = index;
+
+        if (typeof transform === 'function') {
+            object = transform(object, clonedArgs);
+        } else {
+            object = merge(object, transform);
+        }
+
+        return object;
     }
 
     times(n) {
@@ -38,31 +53,23 @@ class Pipeline {
         );
 
         return this;
-    };
+    }
 
     with(transform, args = {}) {
         transform = this._resolve('transform', transform);
 
-        this._objects = this._objects.map((c, i) => {
-            let clonedArgs = cloneDeep(args);
-            clonedArgs.i = i;
-
-            if (typeof transform === 'function') {
-                c = transform(c, clonedArgs);
-            } else {
-                c = merge(c, transform);
-            }
-
-            return c;
+        this._objects = this._objects.map((object, i) => {
+            object = this._invokeTransform(object, transform, args, i);
+            return object;
         });
 
         return this;
-    };
+    }
 
     valueOf() {
         return this._objects.length > 1 ?
             this._objects : this._objects[0];
-    };
+    }
 }
 
 module.exports = Pipeline;
