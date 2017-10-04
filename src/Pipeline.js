@@ -11,7 +11,7 @@ class Pipeline {
     _resolve(type, thing) {
         if (typeof thing === 'string') {
             let remembered = this._memory.get(type, thing);
-            return remembered || thing;
+            return remembered;
         }
         return thing;
     }
