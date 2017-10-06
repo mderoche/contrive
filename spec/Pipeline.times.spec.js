@@ -1,21 +1,10 @@
 const expect = require('chai').expect;
 const contrive = require('../src');
 
-describe('times', () => {
-    it('returns the pipeline for chaining', () => {
+describe('Pipeline.times', () => {
+    it('chains', () => {
         expect(contrive.a({ a: 1 }).times(1))
-            .to.be.an.instanceof(contrive.Pipeline);
-    });
-
-    it('throws an error if given invalid values', () => {
-        expect(() => contrive.a({}).times()).to.throw();
-        expect(() => contrive.a({}).times('1')).to.throw();
-        expect(() => contrive.a({}).times(true)).to.throw();
-        expect(() => contrive.a({}).times(() => {})).to.throw();
-        expect(() => contrive.a({}).times({})).to.throw();
-        expect(() => contrive.a({}).times(Infinity)).to.throw();
-        expect(() => contrive.a({}).times(-Infinity)).to.throw();
-        expect(() => contrive.a({}).times([])).to.throw();
+            .to.be.an.instanceOf(contrive.Pipeline);
     });
 
     it('does nothing if times = 1', () => {

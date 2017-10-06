@@ -72,3 +72,16 @@ describe('scenario:  restaurant bill', () => {
         expect(c).to.deep.equal(expected);
     });
 });
+
+
+let bill = contrive.a('bill')
+    .with('tip')
+    .valueOf();
+
+something()
+    .then(() => {
+        return contrive.a('bill')
+            .async()
+            .with('tip')
+            .valueOf();
+    })

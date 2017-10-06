@@ -14,4 +14,10 @@ describe('contriving', () => {
         contrive.object('test', { a: 1 });
         expect(contrive.memory.store.object.test).to.deep.equal({ a: 1 });
     });
+
+    it('can create a dynamic value', () => {
+        let dv = contrive.dynamicValue(() => 'test');
+        expect(dv).to.be.an.instanceOf(contrive.DynamicValue);
+        expect(dv.valueOf()).to.equal('test');
+    });
 });
