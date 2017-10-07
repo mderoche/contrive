@@ -1,45 +1,32 @@
 const Pipeline = require('./Pipeline');
 const Memory = require('./Memory');
 
-// create a new memory store to keep track of
-// remembered objects and transforms
-const memory = new Memory();
+const _memory = new Memory();
 
+const _store = (type, name, thing) => {
+    if (thing) {
+        _memory.set(type, name, thing);
+        return this;
+    } else {
+        return _memory.get(type, name);
+    }
+};
 
-/**
- * Creates a new pipeline with a starting object
- * @param {Object} object - object to start the pipeline with
- * @returns {Pipeline} pipeline
- */
-const createPipeline = object => {
-    let pipe = new Pipeline({
-        memoryStore: memory
-    });
-    
-    pipe._inject(object);
+const _launch = object => {
+    let pipe = new Pipeline();
+    pipe._injectObject(object);
+    pipe._setMemory(_memory);
     return pipe;
 };
 
-
-/**
- * Stores something for later use
- * @param {string} type - type of thing to store (`object`, or `transform`)
- * @param {string} name - name of the thing to store
- * @param {Object/Function} thing - item to store
- * @return {contrive} the contrive global for chaining
- */
-const store = (type, name, thing) => {
-    memory.set(type, name, thing);
-    return this;
-};
-
 module.exports = {
-    Pipeline: Pipeline,
+    _memory: _memory,
 
-    memory: memory,
+    a: _launch,
+    an: _launch,
+    the: _launch,
 
-    a: createPipeline,
-    an: createPipeline,
-    object: (name, object) => store('object', name, object),
-    transform: (name, transform) => store('transform', name, transform)
+    object: (name, object) => _store('object', name, object),
+    transform: (name, transform) => _store('transform', name, transform),
+    dynamicValue: (name, dynamicValue) => _store('dynamicValue', name, dynamicValue)
 };

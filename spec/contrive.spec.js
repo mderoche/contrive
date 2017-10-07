@@ -1,28 +1,26 @@
 const expect = require('chai').expect;
 const contrive = require('../src');
+const Pipeline = require('../src/Pipeline');
 
 describe('contriving', () => {
     it('creates a contrived pipeline', () => {
-        ['a', 'an'].forEach(alias => {
+        ['a', 'an', 'the'].forEach(alias => {
             let c = contrive[alias]({ a: 1 });
-            expect(c).to.be.an.instanceOf(contrive.Pipeline);
+            expect(c).to.be.an.instanceOf(Pipeline);
             expect(c._objects[0]).to.deep.equal({ a: 1 });
         });
     });
 
-    it('can remember an object', () => {
-        contrive.object('test', { a: 1 });
-        expect(contrive.memory.store.object.test).to.deep.equal({ a: 1 });
+    it('can recall an object', () => {
+        contrive.object('test', 'testing');
+        let o = contrive.object('test');
+        expect(o).to.equal('testing');
     });
 
-    it('can remember a transform', () => {
-        contrive.transform('test', { a: 1 });
-        expect(contrive.memory.store.transform.test).to.deep.equal({ a: 1 });
-    });
-
-    it('can remember a dynamic value', () => {
-        contrive.dynamicValue('test', 'testing');
-        expect(contrive.memory.store.dynamicValue.test).to.equal('testing');
+    it('can recall a transform', () => {
+        contrive.transform('test', 'testing');
+        let o = contrive.object('test');
+        expect(o).to.equal('testing');
     });
 
     it('can recall a dynamic value', () => {

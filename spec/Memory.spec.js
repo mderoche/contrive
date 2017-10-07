@@ -7,21 +7,18 @@ describe('Memory', () => {
         m = new Memory();
     });
 
+    it('starts with an empty store', () => {
+        expect(m._store).to.deep.equal({});
+    });
+
+    it('can get the store', () => {
+        let s = m._getStore();
+        expect(s).to.deep.equal({});
+    });
+
     it('can remember an object', () => {
         m.set('object', 'test', { a: 1 });
-        expect(m.store.object.test).to.deep.equal({ a: 1 });
-    });
-
-    it('can forget an object', () => {
-        m.set('object', 'test', { a: 1 });
-        m.remove('object', 'test');
-        expect(m.store.object.test).to.equal(undefined);
-    });
-
-    it('can forget about everything', () => {
-        m.set('object', 'test', { a: 1 });
-        m.amnesia();
-        expect(m.store).to.deep.equal({});
+        expect(m._getStore().object.test).to.deep.equal({ a: 1 });
     });
 
     it('can reminisce about something remembered', () => {

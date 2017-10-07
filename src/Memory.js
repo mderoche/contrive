@@ -1,25 +1,21 @@
 class Memory {
     constructor () {
-        this.store = {};
+        this._store = {};
+    }
+
+    _getStore() {
+        return this._store;
     }
 
     set(category, name, object) {
-        if (!this.store[category]) {
-            this.store[category] = {};
+        if (!this._getStore()[category]) {
+            this._getStore()[category] = {};
         }
-        this.store[category][name] = object;
-    }
-
-    remove(category, name) {
-        delete this.store[category][name];
+        this._getStore()[category][name] = object;
     }
 
     get(category, name) {
-        return this.store[category][name];
-    }
-
-    amnesia() {
-        this.store = {};
+        return this._getStore()[category][name];
     }
 }
 
