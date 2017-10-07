@@ -16,14 +16,24 @@ class Pipeline {
         return thing;
     }
 
-    _inject(object) {
+    _getObjects() {
+        return this._objects;
+    }
+
+    _injectObject(object) {
         this._objects.push(
             this._resolve('object', object)
         );
+        return this;
     }
 
-    _memoryStore(memory) {
+    _getMemory() {
+        return this._memory;
+    }
+
+    _setMemory(memory) {
         this._memory = memory;
+        return this;
     }
 
     _invokeTransform(object, transform, args = {}, index = 0) {

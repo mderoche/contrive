@@ -7,3 +7,10 @@ describe('DynamicValue', () => {
         expect(dv.valueOf()).to.equal('test');
     });
 });
+
+contrive.dynamic('test', () => {});
+
+
+{
+    a: contrive.dynamic('test')
+}

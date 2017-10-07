@@ -15,9 +15,19 @@ describe('contriving', () => {
         expect(contrive.memory.store.object.test).to.deep.equal({ a: 1 });
     });
 
-    it('can create a dynamic value', () => {
-        let dv = contrive.dynamicValue(() => 'test');
-        expect(dv).to.be.an.instanceOf(contrive.DynamicValue);
-        expect(dv.valueOf()).to.equal('test');
+    it('can remember a transform', () => {
+        contrive.transform('test', { a: 1 });
+        expect(contrive.memory.store.transform.test).to.deep.equal({ a: 1 });
+    });
+
+    it('can remember a dynamic value', () => {
+        contrive.dynamicValue('test', 'testing');
+        expect(contrive.memory.store.dynamicValue.test).to.equal('testing');
+    });
+
+    it('can recall a dynamic value', () => {
+        contrive.dynamicValue('test', 'testing');
+        let recall = contrive.dynamicValue('test');
+        expect(recall).to.equal('testing');
     });
 });
