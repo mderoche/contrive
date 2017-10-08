@@ -3,7 +3,7 @@ const Memory = require('../src/Memory');
 
 describe('Memory', () => {
     let m;
-    before(() => {
+    beforeEach(() => {
         m = new Memory();
     });
 

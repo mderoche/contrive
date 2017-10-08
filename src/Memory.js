@@ -8,14 +8,14 @@ class Memory {
     }
 
     set(category, name, object) {
-        if (!this._getStore()[category]) {
-            this._getStore()[category] = {};
+        if (!this._store[category]) {
+            this._store[category] = {};
         }
-        this._getStore()[category][name] = object;
+        this._store[category][name] = object;
     }
 
     get(category, name) {
-        return this._getStore()[category][name];
+        return this._store[category][name];
     }
 }
 

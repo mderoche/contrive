@@ -15,3 +15,5 @@ class Step {
         throw 'unimplemented exec';
     }
 }
+
+module.exports = Step;

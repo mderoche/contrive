@@ -1,4 +1,5 @@
 const cloneDeep = require('lodash/cloneDeep');
+const Step = require('./Step');
 
 class TimesStep extends Step {
     exec(pipeline) {
