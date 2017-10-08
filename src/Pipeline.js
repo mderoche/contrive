@@ -1,12 +1,15 @@
 const cloneDeep = require('lodash/cloneDeep');
 const merge = require('lodash/merge');
 const Memory = require('./Memory');
+const TimesStep = require('./steps/TimesStep');
+const TransformStep = require('./steps/TransformStep');
 
 class Pipeline {
     constructor () {
         this._objects = [];
         this._queue = [];
         this._memory = new Memory();
+        this._async = false;
     }
 
     _getObjects() {
@@ -31,8 +34,8 @@ class Pipeline {
         return this._queue;
     }
 
-    _enqueue(object) {
-        this._queue.push(object);
+    _enqueue(step) {
+        this._queue.push(step);
         return this;
     }
 
@@ -44,6 +47,32 @@ class Pipeline {
             }
         }
         return thing;
+    }
+
+    _isAsync() {
+        return this._async;
+    }
+
+    eventually() {
+        this._async = true;
+        return this;
+    }
+
+    times(n) {
+        let step = new TimesStep({
+            n: n
+        });
+        this._enqueue(step);
+        return this;
+    }
+
+    with(transform, args) {
+        let step = new TransformStep({
+            transform: this._resolve('transform', transform),
+            args: args
+        });
+        this._enqueue(step);
+        return this;
     }
 }
 

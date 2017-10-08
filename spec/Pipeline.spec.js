@@ -76,7 +76,7 @@ describe('Pipeline', () => {
         });
     });
     
-    xdescribe('async', () => {
+    describe('async', () => {
         it('starts as sync', () => {
             expect(pipe._async).to.equal(false);
         });
@@ -89,30 +89,40 @@ describe('Pipeline', () => {
         it('chains as async', () => {
             expect(pipe.eventually()).to.deep.equal(pipe);
         });
+
+        it('knows if it is async', () => {
+            expect(pipe._isAsync()).to.equal(false);
+            pipe.eventually();
+            expect(pipe._isAsync()).to.equal(true);
+        });
     });
 
-    xdescribe('times', () => {
+    describe('times', () => {
         it('chains', () => {
             expect(pipe.times(1)).to.deep.equal(pipe);
         });
 
         it('adds a `times` step to the queue', () => {
             pipe.times(1);
-            let step = pipe._q[0];
+            let step = pipe._getQueue()[0];
             expect(step).to.be.an.instanceOf(TimesStep);
-            expect(step._type).to.equal('times');
+            expect(step._getPayload()).to.deep.equal({ n: 1 });
         });
     });
 
-    xdescribe('with', () => {
+    describe('with', () => {
         it('chains', () => {
             expect(pipe.with({})).to.deep.equal(pipe);
         });
 
         it('adds a `transform` step to the queue', () => {
-            pipe.with({});
-            let step = pipe._q[0];
+            pipe.with({ a: 1 }, 1);
+            let step = pipe._getQueue()[0];
             expect(step).to.be.an.instanceOf(TransformStep);
+            expect(step._getPayload()).to.deep.equal({
+                transform: { a: 1 },
+                args: 1
+            });
         });
     });
 
