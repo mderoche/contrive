@@ -1,14 +1,14 @@
 class Step {
-    constructor (payload) {
-        this._payload = payload;
+    constructor (options) {
+        this._options = options;
     }
 
-    _getPayload() {
-        return this._payload;
+    _getOptions() {
+        return this._options;
     }
 
-    _setPayload(payload) {
-        this._payload = payload;
+    _getOptions(options) {
+        this._options = options;
     }
 
     exec () {
