@@ -22,6 +22,10 @@ class Pipeline {
         return this._objects;
     }
 
+    _getCompressedObjects() {
+        return (this._getObjects().length === 1) ? this._getObjects()[0] : this._getObjects();
+    }
+
     _injectObject(object) {
         this._objects.push(object);
         return this;
@@ -59,6 +63,12 @@ class Pipeline {
         return this._async;
     }
 
+    _processAsyncQueue(queue, fn) {
+        return queue.reduce((p, step) => {
+            return p.then(() => fn(step));
+        }, Promise.resolve());
+    }
+
     eventually() {
         this._async = true;
         return this;
@@ -93,6 +103,19 @@ class Pipeline {
         }
 
         return this;
+    }
+
+    valueOf() {
+        if (this._isAsync()) {
+            return this._processAsyncQueue(this._getQueue(), step => {
+                return step._invoke(this._getObjects());
+            }).then(() => this._getCompressedObjects());
+        } else {
+            this._getQueue().forEach(step => {
+                step._invoke(this._getObjects());
+            });
+            return this._getCompressedObjects();
+        }
     }
 }
 
