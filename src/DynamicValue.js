@@ -11,7 +11,7 @@ class DynamicValue {
         this._fn = fn;
     }
 
-    exec() {
+    _invoke() {
         let result = this._fn();
 
         if (result instanceof Promise) {

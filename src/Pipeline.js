@@ -2,7 +2,8 @@ const cloneDeep = require('lodash/cloneDeep');
 const merge = require('lodash/merge');
 const Memory = require('./Memory');
 const TimesStep = require('./steps/TimesStep');
-const TransformStep = require('./steps/TransformStep');
+const MergeTransformStep = require('./steps/MergeTransformStep');
+const MapTransformStep = require('./steps/MapTransformStep');
 
 class Pipeline {
     constructor () {
@@ -10,6 +11,11 @@ class Pipeline {
         this._queue = [];
         this._memory = new Memory();
         this._async = false;
+
+        this._stepsLibrary = {
+            object: MergeTransformStep,
+            function: MapTransformStep
+        };
     }
 
     _getObjects() {
@@ -67,11 +73,25 @@ class Pipeline {
     }
 
     with(transform, args) {
-        let step = new TransformStep({
-            transform: this._resolve('transform', transform),
-            args: args
-        });
-        this._enqueue(step);
+        transform = this._resolve('transform', transform);
+
+        if (typeof transform === 'object') {
+            this._enqueue(
+                new MergeTransformStep({
+                    mergeWith: transform
+                })
+            );
+        }
+
+        if (typeof transform === 'function') {
+            this._enqueue(
+                new MapTransformStep({
+                    fn: transform,
+                    args: args
+                })
+            );
+        }
+
         return this;
     }
 }

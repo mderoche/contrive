@@ -27,7 +27,7 @@ describe('DynamicValue', () => {
 
     it('executing the fn resolves with a promise', () => {
         let dv = new DynamicValue(() => 'test');
-        let pr = dv.exec();
+        let pr = dv._invoke();
         expect(pr).to.be.an.instanceOf(Promise);
         return pr.should.eventually.be.equal('test');
     });

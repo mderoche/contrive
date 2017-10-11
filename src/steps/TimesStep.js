@@ -2,7 +2,7 @@ const cloneDeep = require('lodash/cloneDeep');
 const Step = require('./Step');
 
 class TimesStep extends Step {
-    exec(objects) {
+    _invoke(objects) {
         let peek = objects[objects.length - 1];
         let n = this._getOptions().n;
 

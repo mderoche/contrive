@@ -1,7 +1,8 @@
 const expect = require('chai').expect;
 const Pipeline = require('../src/Pipeline');
 const TimesStep = require('../src/steps/TimesStep');
-const TransformStep = require('../src/steps/TransformStep');
+const MapTransformStep = require('../src/steps/MapTransformStep');
+const MergeTransformStep = require('../src/steps/MergeTransformStep');
 
 describe('Pipeline', () => {
     let pipe;
@@ -106,7 +107,7 @@ describe('Pipeline', () => {
             pipe.times(1);
             let step = pipe._getQueue()[0];
             expect(step).to.be.an.instanceOf(TimesStep);
-            expect(step._getPayload()).to.deep.equal({ n: 1 });
+            expect(step._getOptions()).to.deep.equal({ n: 1 });
         });
     });
 
@@ -115,80 +116,20 @@ describe('Pipeline', () => {
             expect(pipe.with({})).to.deep.equal(pipe);
         });
 
-        it('adds a `transform` step to the queue', () => {
-            pipe.with({ a: 1 }, 1);
+        it('adds a merge transform step to the queue', () => {
+            pipe.with({ a: 1 });
             let step = pipe._getQueue()[0];
-            expect(step).to.be.an.instanceOf(TransformStep);
-            expect(step._getPayload()).to.deep.equal({
-                transform: { a: 1 },
-                args: 1
+            expect(step).to.be.an.instanceOf(MergeTransformStep);
+            expect(step._getOptions()).to.deep.equal({
+                mergeWith: { a: 1 }
             });
         });
-    });
 
-    xdescribe('valueOf', () => {
-        it('returns the original value if there are no steps', () => {
-            pipe._injectObject({ a: 1 });
-            expect(pipe.valueOf()).to.deep.equal({ a: 1 });
-        });
-
-        it('returns as an array if there are multiple objects', () => {
-            pipe._injectObject({ a: 1 }).times(2);
-            expect(pipe.valueOf()).to.deep.equal([{ a: 1 }, { a: 1 }]);
-        });
-
-        it('applies transforms as it collapses, to one object', () => {
-            pipe._injectObject({ a: 1 })
-                .with({ b: 2 })
-                .valueOf();
-
-            expect(pipe.valueOf()).to.deep.equal({ a: 1, b: 2 });
-        });
-
-        it('applies transforms as it collapses, to multiple object', () => {
-            pipe._injectObject({ a: 1 })
-                .times(2)
-                .with({ b: 2 })
-                .valueOf();
-
-            expect(pipe.valueOf()).to.deep.equal([{ a: 1, b: 2 }, { a: 1, b: 2 }]);
-        });
-
-        it('applies multiple transforms as it collapses, to multiple object', () => {
-            pipe._injectObject({ a: 1 })
-                .times(2)
-                .with({ b: 2 })
-                .with((data, args) => {
-                    data.index = args.i
-                })
-                .valueOf();
-
-            expect(pipe.valueOf())
-                .to.deep.equal([
-                    { a: 1, b: 2, index: 0 },
-                    { a: 1, b: 2, index: 1 }
-                ]);
-        });
-
-        it('returns a promise if async', () => {
-            let pr = pipe._injectObject({ a: 1 })
-                .eventually()
-                .valueOf();
-
-            expect(pr).to.be.an.instanceOf(Promise);
-        });
-
-        it('resolves with the collapsed result if async', () => {
-            let pr = pipe._injectObject({ a: 1 })
-                .eventually()
-                .times(2)
-                .with({ b: 2 })
-                .valueOf();
-
-            return pr.should.eventually.deep.equal([
-                { a: 1, b: 2 },
-                { a: 1, b: 2 }
-            ]);
+        it('adds a map transform step to the queue', () => {
+            pipe.with(() => 1);
+            let step = pipe._getQueue()[0];
+            expect(step).to.be.an.instanceOf(MapTransformStep);
+            expect(step._getOptions().fn()).to.equal(1);
         });
     });
 });

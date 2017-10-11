@@ -7,12 +7,12 @@ class Step {
         return this._options;
     }
 
-    _getOptions(options) {
+    _setOptions(options) {
         this._options = options;
     }
 
-    exec () {
-        throw 'unimplemented exec';
+    _invoke () {
+        throw 'unimplemented';
     }
 }
 

@@ -7,7 +7,7 @@ describe('TimesStep', () => {
         let step = new TimesStep({
             n: 1
         });
-        let transformed = step.exec([{ a: 1 }]);
+        let transformed = step._invoke([{ a: 1 }]);
         expect(transformed).to.deep.equal([{ a: 1 }]);
     })
 
@@ -15,7 +15,7 @@ describe('TimesStep', () => {
         let step = new TimesStep({
             n: 2
         });
-        let transformed = step.exec([{ a: 1 }]);
+        let transformed = step._invoke([{ a: 1 }]);
         expect(transformed).to.deep.equal([{ a: 1 }, { a: 1 }]);
     });
 });
