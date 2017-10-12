@@ -12,13 +12,8 @@ class DynamicValue {
     }
 
     _invoke() {
-        let result = this._fn();
-
-        if (result instanceof Promise) {
-            return result;
-        }
-
-        return Promise.resolve(result);
+        let r = this._fn();
+        return (r instanceof Promise) ? r : Promise.resolve(r);
     }
 }
 

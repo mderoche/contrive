@@ -1,9 +1,12 @@
 const cloneDeep = require('lodash/cloneDeep');
 const merge = require('lodash/merge');
+const getObjectPath = require('lodash/get');
 const Memory = require('./Memory');
 const TimesStep = require('./steps/TimesStep');
 const MergeTransformStep = require('./steps/MergeTransformStep');
 const MapTransformStep = require('./steps/MapTransformStep');
+const DynamicValue = require('./DynamicValue');
+const util = require('./util');
 
 class Pipeline {
     constructor () {
@@ -69,6 +72,21 @@ class Pipeline {
         }, Promise.resolve());
     }
 
+    _resolveDynamics(object) {
+        let dynamics = util.objectPaths(object)
+            .filter(path => getObjectPath(object, path) instanceof DynamicValue)
+            .map(path => getObjectPath(object, path))
+            .map(dynamicValue => dynamicValue._invoke());
+
+        return Promise.all(dynamics);
+    };
+
+    _resolveDynamicsArray(objects) {
+        return Promise.all(
+            objects.map(object => _resolveDynamics(object))
+        );
+    }
+
     eventually() {
         this._async = true;
         return this;
@@ -109,12 +127,22 @@ class Pipeline {
         if (this._isAsync()) {
             return this._processAsyncQueue(this._getQueue(), step => {
                 return step._invoke(this._getObjects());
-            }).then(() => this._getCompressedObjects());
+            })
+            .then(() => {
+                this._getObjects().forEach(object => this._resolveDynamics(object));
+            })
+            .then(() => this._getCompressedObjects());
         } else {
-            this._getQueue().forEach(step => {
-                step._invoke(this._getObjects());
-            });
-            return this._getCompressedObjects();
+            let prs = this._getQueue()
+                .map(step => {
+                    step
+                        ._invoke(this._getObjects())
+                        .then(() => {
+                            return _resolveDynamicsArray(this._getObjects());
+                        });
+                });
+
+            return Promise.all(prs);
         }
     }
 }

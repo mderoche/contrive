@@ -24,7 +24,7 @@
     "build": "node_modules/.bin/webpack --config conf/webpack-dist.js",
     "watch": "node_modules/.bin/webpack --config conf/webpack.js --watch",
     "lint": "node_modules/.bin/eslint src/*.js",
-    "test": "node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha spec --report lcovonly -- -R spec"
+    "test": "node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha spec/Pipeline.valueOf.spec.js --report lcovonly -- -R spec"
   },
   "dependencies": {
     "faker": "^4.1.0",
