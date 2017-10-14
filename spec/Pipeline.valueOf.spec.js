@@ -33,7 +33,7 @@ describe('valueOf', () => {
             expect(v).to.deep.equal({ a: 2 });
         });
 
-        it('applies a transform to multiple items', () => {
+        xit('applies a transform to multiple items', () => {
             pipe._injectObject({ a: 1 });
             pipe._injectObject({ a: 1 });
             let v = pipe.with({ a: 2 }).valueOf();
@@ -41,7 +41,7 @@ describe('valueOf', () => {
         });
     });
 
-    describe('async', () => {
+    xdescribe('async', () => {
         it('collapses a queue with one item', () => {
             pipe._injectObject({ a: 1 });
             let v = pipe.eventually().valueOf();
@@ -69,7 +69,7 @@ describe('valueOf', () => {
         });
     });
 
-    describe('dynamic values', () => {
+    xdescribe('dynamic values', () => {
         it('processes dynamic values in a merge transform', () => {
             let dv = new DynamicValue(() => 2);
             pipe._injectObject({ a: 1 });

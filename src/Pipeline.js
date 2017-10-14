@@ -83,7 +83,7 @@ class Pipeline {
 
     _resolveDynamicsArray(objects) {
         return Promise.all(
-            objects.map(object => _resolveDynamics(object))
+            objects.map(object => this._resolveDynamics(object))
         );
     }
 
@@ -124,27 +124,29 @@ class Pipeline {
     }
 
     valueOf() {
+        if (!this._getQueue().length) {
+            return this._getCompressedObjects();
+        }
+
         if (this._isAsync()) {
-            return this._processAsyncQueue(this._getQueue(), step => {
+            /*return this._processAsyncQueue(this._getQueue(), step => {
                 return step._invoke(this._getObjects());
             })
             .then(() => {
                 this._getObjects().forEach(object => this._resolveDynamics(object));
             })
-            .then(() => this._getCompressedObjects());
+            .then(() => this._getCompressedObjects());*/
         } else {
             let prs = this._getQueue()
                 .map(step => {
-                    step
-                        ._invoke(this._getObjects())
-                        .then(() => {
-                            return _resolveDynamicsArray(this._getObjects());
-                        });
+                    return step._invoke(this._getObjects());
                 });
 
+            console.log(prs);
             return Promise.all(prs);
         }
-    }
+ 
+   }
 }
 
 module.exports = Pipeline;
