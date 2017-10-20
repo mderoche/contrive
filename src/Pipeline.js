@@ -8,6 +8,13 @@ const MapTransformStep = require('./steps/MapTransformStep');
 const DynamicValue = require('./DynamicValue');
 const util = require('./util');
 
+async function invokeAsyncSteps(objs, steps) {
+    for (const step of steps) {
+        objs = await step._invoke(objs)
+    }
+    return objs;
+}
+
 class Pipeline {
     constructor () {
         this._objects = [];
@@ -25,8 +32,8 @@ class Pipeline {
         return this._objects;
     }
 
-    _getCompressedObjects() {
-        return (this._getObjects().length === 1) ? this._getObjects()[0] : this._getObjects();
+    _compress(objects) {
+        return (objects.length === 1) ? objects[0] : objects;
     }
 
     _injectObject(object) {
@@ -66,27 +73,6 @@ class Pipeline {
         return this._async;
     }
 
-    _processAsyncQueue(queue, fn) {
-        return queue.reduce((p, step) => {
-            return p.then(() => fn(step));
-        }, Promise.resolve());
-    }
-
-    _resolveDynamics(object) {
-        let dynamics = util.objectPaths(object)
-            .filter(path => getObjectPath(object, path) instanceof DynamicValue)
-            .map(path => getObjectPath(object, path))
-            .map(dynamicValue => dynamicValue._invoke());
-
-        return Promise.all(dynamics);
-    };
-
-    _resolveDynamicsArray(objects) {
-        return Promise.all(
-            objects.map(object => this._resolveDynamics(object))
-        );
-    }
-
     eventually() {
         this._async = true;
         return this;
@@ -124,28 +110,26 @@ class Pipeline {
     }
 
     valueOf() {
-        if (!this._getQueue().length) {
-            return this._getCompressedObjects();
-        }
+        let objects = this._getObjects();
 
-        if (this._isAsync()) {
-            /*return this._processAsyncQueue(this._getQueue(), step => {
-                return step._invoke(this._getObjects());
-            })
-            .then(() => {
-                this._getObjects().forEach(object => this._resolveDynamics(object));
-            })
-            .then(() => this._getCompressedObjects());*/
+        if (!this._isAsync()) {
+            if (!this._getQueue().length) {
+                return this._compress(this._getObjects());
+            }
+
+            this._getQueue().forEach(step => {
+                objects = step._invoke(objects);
+            });
+
+            return this._compress(objects);
         } else {
-            let prs = this._getQueue()
-                .map(step => {
-                    return step._invoke(this._getObjects());
-                });
-
-            console.log(prs);
-            return Promise.all(prs);
+            if (!this._getQueue().length) {
+                return Promise.resolve(this._compress(this._getObjects()));
+            }
+            
+            return invokeAsyncSteps(objects, this._getQueue())
+                .then(o => this._compress(o));
         }
- 
    }
 }
 

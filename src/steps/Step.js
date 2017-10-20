@@ -1,7 +1,6 @@
 class Step {
     constructor (options, async) {
         this._options = options;
-        this._async = async;
     }
 
     _getOptions() {
@@ -10,10 +9,6 @@ class Step {
 
     _setOptions(options) {
         this._options = options;
-    }
-
-    _isAsync() {
-        return this._async;
     }
 
     _invoke () {

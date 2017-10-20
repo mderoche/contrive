@@ -12,17 +12,16 @@ describe('MergeTransformStep', () => {
             mergeWith: { b: 2 }
         });
 
-        let pr = step._invoke([{ a: 1 }]);
-        expect(pr).to.be.an.instanceOf(Promise);
-        return pr.should.eventually.deep.equal([ { a: 1, b: 2 } ]);
+        let transform = step._invoke([{ a: 1 }]);
+        expect(transform).to.deep.equal([{ a: 1, b: 2 }]);
     });
 
     it('merges with conflicts', () => {
         let step = new MergeTransformStep({
             mergeWith: { a: 2 }
         });
-        let pr = step._invoke([{ a: 1 }]);
-        expect(pr).to.be.an.instanceOf(Promise);
-        return pr.should.eventually.deep.equal([ { a: 2 } ]);
+
+        let transform = step._invoke([{ a: 1 }]);
+        expect(transform).to.deep.equal([{ a: 2 }]);
     });
 });

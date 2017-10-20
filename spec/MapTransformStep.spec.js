@@ -15,9 +15,8 @@ describe('MapTransformStep', () => {
             }
         });
 
-        let pr = step._invoke([{ a: 1 }]);
-        expect(pr).to.be.an.instanceOf(Promise);
-        return pr.should.eventually.deep.equal([ { a: 2 } ]);
+        let t = step._invoke([{ a: 1 }]);
+        expect(t).to.deep.equal([ { a: 2 } ]);
     });
 
     it('transforms with a map using args', () => {
@@ -31,9 +30,8 @@ describe('MapTransformStep', () => {
             }
         });
 
-        let pr = step._invoke([{ a: 1 }]);
-        expect(pr).to.be.an.instanceOf(Promise);
-        return pr.should.eventually.deep.equal([ { a: 5 } ]);
+        let t = step._invoke([{ a: 1 }]);
+        expect(t).to.deep.equal([ { a: 5 } ]);
     });
 
     it('transforms with a map using args index', () => {
@@ -44,22 +42,18 @@ describe('MapTransformStep', () => {
             }
         });
 
-        let pr = step._invoke([{ a: 1 }, { a: 1 }, { a: 1 }]);
-        expect(pr).to.be.an.instanceOf(Promise);
-        return pr.should.eventually.deep.equal([ { a: 0 }, { a: 1 }, { a: 2 } ]);
+        let t = step._invoke([{ a: 1 }, { a: 1 }, { a: 1 }]);
+        expect(t).to.deep.equal([ { a: 0 }, { a: 1 }, { a: 2 } ]);
     });
 
-    it('transforms asynchronously', () => {
+    it('transforms with a simple map', () => {
         let step = new MapTransformStep({
             fn: data => {
-                return Promise.resolve({
-                    a: data.a + 1
-                });
+                return Promise.resolve({ a: 2 });
             }
         });
 
-        let pr = step._invoke([{ a: 1 }]);
-        expect(pr).to.be.an.instanceOf(Promise);
-        return pr.should.eventually.deep.equal([ { a: 2 } ]);
+        let pr = step._invoke([{ a: 1 }], { async: true });
+        return pr.should.eventually.deep.equal([{ a: 2 }]);
     });
 });
