@@ -26,7 +26,8 @@ Creates a pipeline, injecting the `thing`.
 
 ```
 let bill = { cost: 50 };
-contrive.a(bill).valueOf();
+contrive.a(bill)
+    .valueOf();
 
 // { cost: 50 }
 ```
@@ -37,7 +38,9 @@ Clones the last `thing` in the pipline **n** times, adding all copies back into 
 
 ```
 let bill = { cost: 50 };
-contrive.a(bill).times(2).valueOf();
+contrive.a(bill)
+    .times(2)
+    .valueOf();
 
 // [{ cost: 50 }, { cost: 50 }]
 ```
@@ -138,7 +141,8 @@ let discount = function (thing, args) {
     return Promise.resolve({ cost: discounted });
 };
 
-contrive.a()
+contrive.a(bill)
+    .eventually()
     .with(discount)
     .valueOf()
     .then(function (bill) {
