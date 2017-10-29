@@ -3,9 +3,11 @@ const merge = require('lodash/merge');
 const Step = require('./Step');
 
 class MergeTransformStep extends Step {
-    _invoke(objects, opts = {}) {
-        let mergeWith = this._getOptions().mergeWith;
-        let transformed = objects.map(object => merge(object, mergeWith));
+    _invoke(things, opts = {}) {
+        things = cloneDeep(things);
+
+        let mergeWith = this.options.mergeWith;
+        let transformed = things.map(thing => merge(thing, mergeWith));
         
         if (opts.async) {
             return Promise.resolve(transformed);

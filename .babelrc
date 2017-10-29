@@ -1,4 +1,12 @@
 {
     "presets": ["env"],
-    "plugins": ["transform-async-to-generator"]
+    "plugins": [
+        "transform-async-to-generator",
+        "istanbul", {
+            "exclude": [
+                "**/*.spec.js"
+            ],
+            "useInlineSourceMaps": false
+        }
+    ]
 }

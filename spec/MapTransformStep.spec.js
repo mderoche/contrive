@@ -46,10 +46,21 @@ describe('MapTransformStep', () => {
         expect(t).to.deep.equal([ { a: 0 }, { a: 1 }, { a: 2 } ]);
     });
 
-    it('transforms with a simple map', () => {
+    it('transforms async', () => {
         let step = new MapTransformStep({
             fn: data => {
                 return Promise.resolve({ a: 2 });
+            }
+        });
+
+        let pr = step._invoke([{ a: 1 }], { async: true });
+        return pr.should.eventually.deep.equal([{ a: 2 }]);
+    });
+
+    it('transforms async even if the map doesn\'t return a promise', () => {
+        let step = new MapTransformStep({
+            fn: data => {
+                return { a: 2 };
             }
         });
 

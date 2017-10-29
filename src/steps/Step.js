@@ -1,18 +1,18 @@
 class Step {
-    constructor (options, async) {
-        this._options = options;
+    constructor (options) {
+        this.options = options;
     }
 
-    _getOptions() {
+    get options() {
         return this._options;
     }
 
-    _setOptions(options) {
-        this._options = options;
+    set options(o) {
+        this._options = o;
     }
 
     _invoke () {
-        throw 'unimplemented';
+        throw 'step instance does not invoke';
     }
 }
 

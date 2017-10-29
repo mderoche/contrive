@@ -24,4 +24,13 @@ describe('MergeTransformStep', () => {
         let transform = step._invoke([{ a: 1 }]);
         expect(transform).to.deep.equal([{ a: 2 }]);
     });
+
+    it('merges async', () => {
+        let step = new MergeTransformStep({
+            mergeWith: { b: 2 }
+        });
+
+        let pr = step._invoke([{ a: 1 }], { async: true });
+        pr.should.eventually.deep.equal([{ a: 1, b: 2 }]);
+    });
 });

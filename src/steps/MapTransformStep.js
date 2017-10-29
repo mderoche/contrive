@@ -3,26 +3,24 @@ const merge = require('lodash/merge');
 const Step = require('./Step');
 
 class MapTransformStep extends Step {
-    _invoke(objects, opts = {}) {
-        let fn = this._getOptions().fn;
-        let args = this._getOptions().args || {};
+    _invoke(things, opts = {}) {
+        let fn = this.options.fn;
+        let args = this.options.args || {};
+        let clonedArgs = cloneDeep(args);
 
         if (opts.async) {
-            let prs = objects.map((object, i) => {
-                let clonedArgs = cloneDeep(args);
+            let prs = things.map((thing, i) => {
                 clonedArgs.i = i;
-
-                let transform = fn(object, clonedArgs);
-
+                let transform = fn(thing, clonedArgs);
                 return (transform instanceof Promise) ? transform : Promise.resolve(transform);
             });
 
             return Promise.all(prs);
         } else {
-            let transformed = objects.map((object, i) => {
+            let transformed = things.map((thing, i) => {
                 let clonedArgs = cloneDeep(args);
                 clonedArgs.i = i;
-                return fn(object, clonedArgs);
+                return fn(cloneDeep(thing), clonedArgs);
             });
             return transformed;
         }
